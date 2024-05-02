@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding"
+        android:layout_margin="@dimen/margin"
+        android:textSize="@dimen/listViewTextSize"
+        android:layout_weight="3"
+        android:id="@+id/CatNameList">
+    </TextView>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin"
+        android:textSize="@dimen/listViewTextSize"
+        android:text="@string/Inc"
+        android:id="@+id/IncCheckList"
+        android:clickable="false"
+        android:focusable="false">
+    </CheckBox>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin"
+        android:textSize="@dimen/listViewTextSize"
+        android:text="@string/Exc"
+        android:id="@+id/ExcCheckList"
+        android:clickable="false"
+        android:focusable="false">
+    </CheckBox>
+</LinearLayout>

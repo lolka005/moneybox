@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <androidx.appcompat.widget.Toolbar
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/ToolbarList"
+            android:textSize="@dimen/toolBarTextSize">
+        </TextView>
+    </androidx.appcompat.widget.Toolbar>
+<ListView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:id="@+id/ListView">
+</ListView>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textSize"
+        android:backgroundTint="@color/btnColor"
+        android:text="@string/backBtn"
+        android:textAllCaps="false"
+        android:layout_margin="@dimen/margin"
+        android:padding="@dimen/padding"
+        android:onClick="ClickBackBtnIncExcList">
+    </Button>
+</LinearLayout>

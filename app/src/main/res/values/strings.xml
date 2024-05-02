@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Копилка</string>
+    <string name="btnAddExp">Добавить расходы</string>
+    <string name="btnAddInc">Добавить доходы</string>
+    <string name="mainTextViewText">Текущие накопления:</string>
+    <string name="deleteBtn">Удалить</string>
+    <string name="saveBtn">Сохранить</string>
+    <string name="showAllExp">Все расходы</string>
+    <string name="showAllInc">Все доходы</string>
+    <string name="backBtn">Назад</string>
+    <string name="TextData">Дата:</string>
+    <string name="Inc">Доходы</string>
+    <string name="Exc">Расходы</string>
+    <string name="CatCreationToolBar">Создание новой категории</string>
+    <string name="CatCreationBtn">Созданть новоую категорию</string>
+    <string name="AllCatList">Список всех категорий</string>
+    <string name="ChosenMonth">Выбранный месяц:</string>
+</resources>

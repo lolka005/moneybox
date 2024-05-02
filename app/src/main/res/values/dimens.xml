@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin">12dp</dimen>
+    <dimen name="padding">12dp</dimen>
+    <dimen name="textSize">16sp</dimen>
+    <dimen name="toolBarTextSize">20sp</dimen>
+    <dimen name="listViewTextSize">14sp</dimen>
+</resources>
