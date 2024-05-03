@@ -14,10 +14,12 @@
             android:textSize="@dimen/toolBarTextSize">
         </TextView>
     </androidx.appcompat.widget.Toolbar>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:layout_below="@+id/ToolbarMain">
+        android:layout_below="@+id/ToolbarMain"
+        android:id="@+id/monthSelector">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -33,11 +35,19 @@
             android:layout_weight="2">
         </Spinner>
     </LinearLayout>
-
+    <org.eazegraph.lib.charts.PieChart
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_above="@+id/llForSumAndCur"
+        android:id="@+id/PieChart"
+        android:padding="@dimen/padding"
+        android:layout_margin="@dimen/margin">
+    </org.eazegraph.lib.charts.PieChart>
     <LinearLayout
+        android:id="@+id/llForSumAndCur"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:layout_centerInParent="true">
+        android:layout_above="@+id/btnAllCat">
         <TextView
             android:id="@+id/Sum"
             android:layout_width="wrap_content"
@@ -120,6 +130,7 @@
         </Button>
     </LinearLayout>
     <Button
+        android:id="@+id/btnAllCat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/llForList"

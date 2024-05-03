@@ -118,7 +118,6 @@ public class IncExcActivity extends AppCompatActivity {
         spinnerCategory = findViewById(R.id.categorySpinner);
         spinnerCurrency = findViewById(R.id.CurrencySpinnerInAdd);
         ToolBarText = findViewById(R.id.ToolbarTextInSecond);
-
         ArrayAdapter adapterForSpinnerCategory = new ArrayAdapter(this, R.layout.text_view_for_spinner);
         ArrayAdapter adapterForSpinnerCurency = new ArrayAdapter(this, R.layout.text_view_for_spinner);
         sqlAnswer = new ArrayList<>();
@@ -135,6 +134,9 @@ public class IncExcActivity extends AppCompatActivity {
         adapterForSpinnerCategory.addAll(tempNameOfCategory);
         spinnerCategory.setAdapter(adapterForSpinnerCategory);
         List<MyCurrencyClass> listOfCurrency = getCurrencyListFromDB();
+        if(listOfCurrency.size() == 0){
+            listOfCurrency.add(new MyCurrencyClass("Российский рубль", 1F));
+        }
         String[] tempNameOfCurrency = new String[listOfCurrency.size()];
         for(int i = 0; i < listOfCurrency.size(); i++){
             tempNameOfCurrency[i] = listOfCurrency.get(i).getName();

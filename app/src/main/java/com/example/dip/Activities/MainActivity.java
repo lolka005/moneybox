@@ -1,9 +1,13 @@
 package com.example.dip.Activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.database.Cursor;
 import android.util.Log;
@@ -13,6 +17,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.window.SplashScreen;
+
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,13 +31,15 @@ import com.example.dip.XML.MyXMLReader;
 import com.example.dip.R;
 import com.example.dip.XML.XMLHelper;
 
+import org.eazegraph.lib.charts.PieChart;
+import org.eazegraph.lib.models.PieModel;
+
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class MainActivity extends AppCompatActivity
@@ -45,7 +54,8 @@ public class MainActivity extends AppCompatActivity
     private MyXMLReader myXMLReader;
     private List<MyCurrencyClass> currencyList;
     private Spinner currencySpinner, monthSpinner;
-    List<DatesListClass> monthList;
+    private PieChart pieChart;
+    private List<DatesListClass> monthList;
     private Integer Version;
 
     /**
@@ -68,14 +78,24 @@ public class MainActivity extends AppCompatActivity
         currencySpinner = findViewById(R.id.CurrencySpinnerInMain);
         monthSpinner = findViewById(R.id.spinnerMonth);
         toolBarText = findViewById(R.id.ToolbarTextMain);
+        pieChart = findViewById(R.id.PieChart);
         databaseHelper = new DBHelper(getApplicationContext());
         xmlHelper = new XMLHelper();
         xmlHelper.execute("https://www.cbr-xml-daily.ru/daily_utf8.xml");
         SharedPreferences version = getSharedPreferences("version", 0);
-        Version = version.getInt("version",1);
+        Version = version.getInt("version", 1);
         databaseHelper.create_db();
         db = databaseHelper.open();
-        databaseHelper.update(db, Version, version);
+        if (databaseHelper.update(db, Version, version))
+        {
+            Intent mStartActivity = new Intent(MainActivity.this, SplashScreen.class);
+            int mPendingIntentId = 123456;
+            PendingIntent mPendingIntent = PendingIntent.getActivity(MainActivity.this, mPendingIntentId, mStartActivity,
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+            AlarmManager mgr = (AlarmManager) MainActivity.this.getSystemService(Context.ALARM_SERVICE);
+            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+            System.exit(0);
+        };
         try {
             xmlString = xmlHelper.get(10, TimeUnit.SECONDS);
             myXMLReader = new MyXMLReader(xmlString);
@@ -86,8 +106,7 @@ public class MainActivity extends AppCompatActivity
             } else {
                 updateCurseOfCurrency();
             }
-        }
-        catch (ExecutionException | InterruptedException | TimeoutException ex) {
+        } catch (ExecutionException | InterruptedException | TimeoutException ex) {
             throw new RuntimeException(ex);
         }
         currencyList.clear();
@@ -107,7 +126,8 @@ public class MainActivity extends AppCompatActivity
                 sumText.setText(getResources().getString(R.string.mainTextViewText) + " " + roundedNumber);
             }
             @Override
-            public void onNothingSelected(AdapterView<?> parent) { currencySpinner.setSelection(0); }
+            public void onNothingSelected(AdapterView<?> parent) { currencySpinner.setSelection(0);
+            FillChart();}
         });
         LocalDate tempDate = LocalDate.now();
         for(int i = 0; i < 5; i++)
@@ -133,10 +153,12 @@ public class MainActivity extends AppCompatActivity
 
                 double roundedNumber = Math.round(getCurrentSum() * 100.0) / 100.0;
                 sumText.setText(getResources().getString(R.string.mainTextViewText) + " " + roundedNumber);
+                FillChart();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 monthSpinner.setSelection(0);
+                FillChart();
             }
         });
     }
@@ -212,7 +234,7 @@ public class MainActivity extends AppCompatActivity
     public void onResume() {
         super.onResume();
         sumText.setText(getResources().getString(R.string.mainTextViewText) + " "+ (float) Math.round(getCurrentSum() * 100) / 100);
-        userCursor.close();
+        FillChart();
     }
 
     /**
@@ -222,9 +244,12 @@ public class MainActivity extends AppCompatActivity
     private Float getCurrentSum()
     {
         List<Float> listSum = new ArrayList<>();
+        Float TempExc = 0F;
+        Float TempInc = 0F;
         for(int i = 0; i < currencySpinner.getCount(); i++){
-            listSum.add(getSumInc(i+1, monthList.get(monthSpinner.getSelectedItemPosition()).getStartDateOfMonth(), monthList.get(monthSpinner.getSelectedItemPosition()).getEndDateOfMonth())
-                    - getSumExc(i+1, monthList.get(monthSpinner.getSelectedItemPosition()).getStartDateOfMonth(), monthList.get(monthSpinner.getSelectedItemPosition()).getEndDateOfMonth()));
+            TempInc = getSumInc(i+1, monthList.get(monthSpinner.getSelectedItemPosition()).getStartDateOfMonth(), monthList.get(monthSpinner.getSelectedItemPosition()).getEndDateOfMonth());
+            TempExc = getSumExc(i+1, monthList.get(monthSpinner.getSelectedItemPosition()).getStartDateOfMonth(), monthList.get(monthSpinner.getSelectedItemPosition()).getEndDateOfMonth());
+            listSum.add(TempInc - TempExc);
         }
         Float Sum = 0.0F;
         if(currencySpinner.getSelectedItemId() == 0)
@@ -272,7 +297,7 @@ public class MainActivity extends AppCompatActivity
     {
         ContentValues cv = new ContentValues();
         for (int i = 1; i < currencyList.size(); i++) {
-        cv.put("Currency_Value", currencyList.get(i).getValue());
+        cv.put("Currency_Value", currencyList.get(i-1).getValue());
         db.update("Currency", cv, "Currency_ID =" + i + 1, null);
         }
     }
@@ -335,5 +360,38 @@ public class MainActivity extends AppCompatActivity
             Currency_Value = userCursor.getFloat(0);
         }
         return Currency_Value;
+    }
+
+    private void FillChart()
+    {
+        pieChart.clearChart();
+        pieChart.setTooltipText("sdfsdfsdfsdgsdg");
+        Float TempExc = 0F;
+        Float TempInc = 0F;
+        for(int i = 0; i < currencySpinner.getCount(); i++){
+            TempInc += getSumInc(i+1, monthList.get(monthSpinner.getSelectedItemPosition()).getStartDateOfMonth(), monthList.get(monthSpinner.getSelectedItemPosition()).getEndDateOfMonth());
+            TempExc += getSumExc(i+1, monthList.get(monthSpinner.getSelectedItemPosition()).getStartDateOfMonth(), monthList.get(monthSpinner.getSelectedItemPosition()).getEndDateOfMonth());
+        }
+        if(currencySpinner.getSelectedItemId() != 0)
+        {
+            Float CurrencyValue = getCourse( (int) currencySpinner.getSelectedItemId() + 1);
+            TempExc /= CurrencyValue;
+            TempInc /= CurrencyValue;
+        }
+
+        pieChart.addPieSlice(
+                new PieModel(
+                        "Доходы",
+                        Math.round(TempInc),
+                        Color.GREEN
+                )
+        );
+        pieChart.addPieSlice( new PieModel(
+                        "Расходы",
+                        Math.round(TempExc),
+                        Color.RED
+                )
+        );
+        pieChart.startAnimation();
     }
 }

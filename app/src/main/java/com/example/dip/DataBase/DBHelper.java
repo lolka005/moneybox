@@ -1,5 +1,6 @@
 package com.example.dip.DataBase;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.SQLException;
@@ -17,7 +18,7 @@ public class DBHelper extends SQLiteOpenHelper
 {
     private static String DB_PATH;
     private static String DB_NAME = "Diplom.db";
-    private static final int SCHEMA = 3;
+    private static final int SCHEMA = 4;
     public static final String TABLE = "Money";
     public static final String COLUMN_ID = "ID";
     public static final String COLUMN_DATE = "Date";
@@ -89,7 +90,7 @@ public class DBHelper extends SQLiteOpenHelper
         return SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READWRITE);
     }
 
-    public void update(SQLiteDatabase db, int oldVersion, SharedPreferences version)
+    public boolean update(SQLiteDatabase db, int oldVersion, SharedPreferences version)
     {
         if(oldVersion < SCHEMA)
         {
@@ -97,6 +98,8 @@ public class DBHelper extends SQLiteOpenHelper
             SharedPreferences.Editor mEditor = version.edit();
             mEditor.putInt("version", SCHEMA).commit();
             create_db();
+            return true;
         }
+        return false;
     }
 }
