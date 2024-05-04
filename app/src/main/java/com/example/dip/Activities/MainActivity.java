@@ -80,11 +80,11 @@ public class MainActivity extends AppCompatActivity {
         databaseHelper.create_db();
         db = databaseHelper.open();
         if (databaseHelper.update(version1, version)) {
-            Intent mStartActivity = new Intent(MainActivity.this, SplashScreen.class);
+            Context context = this;
+            Intent mStartActivity = new Intent(context, MainActivity.class);
             int mPendingIntentId = 123456;
-            PendingIntent mPendingIntent = PendingIntent.getActivity(MainActivity.this, mPendingIntentId, mStartActivity,
-                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-            AlarmManager mgr = (AlarmManager) MainActivity.this.getSystemService(Context.ALARM_SERVICE);
+            PendingIntent mPendingIntent = PendingIntent.getActivity(context, mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+            AlarmManager mgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
             mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
             System.exit(0);
         }
@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < currencyList.size() + 1; i++) {
             if (i == 0) {
                 ContentValues cv = new ContentValues();
-                cv.put("Currency_Name", "Российский рубль");
+                cv.put("Currency_Name", "RUB");
                 cv.put("Currency_Value", 1);
                 db.insert("Currency", null, cv);
             } else {
@@ -361,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
             TempExc /= CurrencyValue;
             TempInc /= CurrencyValue;
         }
-        if (TempInc != 0 && TempExc != 0) {
+        if (TempInc != 0 || TempExc != 0) {
             pieChart.addPieSlice(
                     new PieModel(
                             "Доходы",
@@ -375,7 +375,6 @@ public class MainActivity extends AppCompatActivity {
                             Color.RED
                     )
             );
-            pieChart.startAnimation();
         } else {
             pieChart.addPieSlice(
                     new PieModel(
@@ -385,5 +384,6 @@ public class MainActivity extends AppCompatActivity {
                     )
             );
         }
+        pieChart.startAnimation();
     }
 }

@@ -18,7 +18,7 @@ public class DBHelper extends SQLiteOpenHelper
 {
     private static String DB_PATH;
     private static final String DB_NAME = "Diplom.db";
-    private static final int SCHEMA = 4;
+    private static final int SCHEMA = 5;
     public static final String TABLE = "Money";
     public static final String COLUMN_ID = "ID";
     public static final String COLUMN_DATE = "Date";
