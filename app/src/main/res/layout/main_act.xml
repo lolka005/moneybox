@@ -50,7 +50,7 @@
         android:layout_above="@+id/btnAllCat">
         <TextView
             android:id="@+id/Sum"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/mainTextViewText"
@@ -70,7 +70,7 @@
         android:layout_alignParentBottom="true"
         android:id="@+id/llForAdd">
         <Button
-            android:id="@+id/btnAddExp"
+            android:id="@+id/btnAddExc"
             android:layout_margin="@dimen/margin"
             android:padding="@dimen/padding"
             android:textSize="@dimen/textSize"
@@ -80,7 +80,7 @@
             android:layout_width="150dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:onClick="ClickBtnExp">
+            android:onClick="ClickBtnExc">
         </Button>
         <Button
             android:id="@+id/BtnAddInc"
@@ -103,7 +103,7 @@
         android:layout_above="@id/llForAdd"
         android:id="@+id/llForList">
         <Button
-            android:id="@+id/btnAllExp"
+            android:id="@+id/btnAllExc"
             android:layout_margin="@dimen/margin"
             android:padding="@dimen/padding"
             android:textSize="@dimen/textSize"

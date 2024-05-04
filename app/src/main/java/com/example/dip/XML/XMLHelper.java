@@ -8,15 +8,14 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class XMLHelper extends AsyncTask<String, Void, String>{
+public class XMLHelper extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... urls) {
         String answer = "";
         try {
             answer = downloadFile(urls[0]);
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         return answer;
@@ -28,10 +27,10 @@ public class XMLHelper extends AsyncTask<String, Void, String>{
     }
 
     private String downloadFile(String url) throws InterruptedException {
-        String myText= "";
+        String myText = "";
         try {
             URL myUrl = new URL(url);
-            HttpURLConnection conn=(HttpURLConnection) myUrl.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) myUrl.openConnection();
             conn.setConnectTimeout(60000);
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String str;
@@ -41,7 +40,7 @@ public class XMLHelper extends AsyncTask<String, Void, String>{
             in.close();
 
         } catch (Exception e) {
-            Log.d("MyTag",e.toString());
+            Log.d("MyTag", e.toString());
         }
         return myText;
     }
@@ -50,5 +49,4 @@ public class XMLHelper extends AsyncTask<String, Void, String>{
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
     }
-
 }

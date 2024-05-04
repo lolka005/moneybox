@@ -21,25 +21,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IncEcxListActivity extends AppCompatActivity
-    implements AdapterView.OnItemClickListener
-{
+        implements AdapterView.OnItemClickListener {
 
     private ListView ll;
-    private ListViewAdapterForIncExcList arad;
     private TextView toolBarText;
     private Cursor userCursor;
-    private List<IncExcListViewClass> list = new ArrayList<>();
-    private DBHelper databaseHelper;
-    private SQLiteDatabase db;
+    private final List<IncExcListViewClass> list = new ArrayList<>();
     private Integer MoveTypeExtra;
     private String StartDate, EndDate;
 
     /**
-     *
      * @param savedInstanceState If the activity is being re-initialized after
-     *     previously being shut down then this Bundle contains the data it most
-     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
-     *
+     *                           previously being shut down then this Bundle contains the data it most
+     *                           recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
      */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,11 +45,10 @@ public class IncEcxListActivity extends AppCompatActivity
         EndDate = extras.getString("EndDate");
         ll = findViewById(R.id.ListView);
         toolBarText = findViewById(R.id.ToolbarList);
-        databaseHelper = new DBHelper(this);
-        db = databaseHelper.open();
-        userCursor = db.rawQuery("SELECT Money.ID, Money.Sum, Categories.Cat_Name, Currency.Currency_Name, Money.Date  FROM Money INNER JOIN Categories ON Categories.Cat_ID = Money.Cat_ID INNER JOIN Currency ON Currency.Currency_ID = Money.Currency_ID WHERE Money.MoveType_ID = ? AND (Money.Date >= ? AND Money.Date <= ?)", new String[] {String.valueOf(MoveTypeExtra), StartDate, EndDate});
-        while(userCursor.moveToNext())
-        {
+        DBHelper databaseHelper = new DBHelper(this);
+        SQLiteDatabase db = databaseHelper.open();
+        userCursor = db.rawQuery("SELECT Money.ID, Money.Sum, Categories.Cat_Name, Currency.Currency_Name, Money.Date  FROM Money INNER JOIN Categories ON Categories.Cat_ID = Money.Cat_ID INNER JOIN Currency ON Currency.Currency_ID = Money.Currency_ID WHERE Money.MoveType_ID = ? AND (Money.Date >= ? AND Money.Date <= ?)", new String[]{String.valueOf(MoveTypeExtra), StartDate, EndDate});
+        while (userCursor.moveToNext()) {
             Integer id = userCursor.getInt(0);
             Float sum = userCursor.getFloat(1);
             String type_name = userCursor.getString(2);
@@ -63,32 +56,31 @@ public class IncEcxListActivity extends AppCompatActivity
             String date = userCursor.getString(4);
             list.add(new IncExcListViewClass(id, type_name, sum, currency_name, date));
         }
-        arad = new ListViewAdapterForIncExcList(list);
+        ListViewAdapterForIncExcList arad = new ListViewAdapterForIncExcList(list);
         ll.setOnItemClickListener(this);
         ll.setAdapter(arad);
-        if(MoveTypeExtra == 1){
+        if (MoveTypeExtra == 1) {
             toolBarText.setText("Список доходов");
-        }
-        else if (MoveTypeExtra == 2){
+        } else if (MoveTypeExtra == 2) {
             toolBarText.setText("Список расходов");
         }
     }
 
     /**
      * Обработчик нажатия на элемент списка
-     * @param parent The AdapterView where the click happened.
-     * @param view The view within the AdapterView that was clicked (this
-     *            will be a view provided by the adapter)
+     *
+     * @param parent   The AdapterView where the click happened.
+     * @param view     The view within the AdapterView that was clicked (this
+     *                 will be a view provided by the adapter)
      * @param position The position of the view in the adapter.
-     * @param id The row id of the item that was clicked.
+     * @param id       The row id of the item that was clicked.
      */
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-    {
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(this, IncExcActivity.class);
-        intent.putExtra("MoveTypeID",MoveTypeExtra);
+        intent.putExtra("MoveTypeID", MoveTypeExtra);
         intent.putExtra("TypeName", list.get(position).getCategoryName());
-        intent.putExtra("CurrentSum",list.get(position).getSum());
+        intent.putExtra("CurrentSum", list.get(position).getSum());
         intent.putExtra("MoneyID", list.get(position).getID());
         intent.putExtra("CurrencyName", list.get(position).getCurrencyName());
         intent.putExtra("Date", list.get(position).getDate());
@@ -97,10 +89,10 @@ public class IncEcxListActivity extends AppCompatActivity
 
     /**
      * Обработчки нажатия на кнопкку "Назад"
+     *
      * @param view
      */
-    public void ClickBackBtnIncExcList(View view)
-    {
+    public void ClickBackBtnIncExcList(View view) {
         onBackPressed();
     }
 }

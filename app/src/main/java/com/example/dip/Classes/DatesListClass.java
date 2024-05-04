@@ -1,13 +1,11 @@
 package com.example.dip.Classes;
 
-public class DatesListClass
-{
-    private String nameOfMonth;
-    private String startDateOfMonth;
-    private String endDateOfMonth;
+public class DatesListClass {
+    private final String nameOfMonth;
+    private final String startDateOfMonth;
+    private final String endDateOfMonth;
 
-    public DatesListClass(String name, String start, String end)
-    {
+    public DatesListClass(String name, String start, String end) {
         nameOfMonth = name;
         startDateOfMonth = start;
         endDateOfMonth = end;
