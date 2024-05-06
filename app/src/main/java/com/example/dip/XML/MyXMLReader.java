@@ -16,11 +16,10 @@ import java.util.Objects;
 
 public class MyXMLReader
 {
-    private List<MyCurrencyClass> CurencyList = new ArrayList<>();
-
-    private String XMLString;
-
-    private String tagName, tempValue, CurrencyName;
+    private final List<MyCurrencyClass> CurencyList = new ArrayList<>();
+    private final String XMLString;
+    private String tagName;
+    private String CurrencyName;
     private Float Value;
 
     public MyXMLReader(String XMLstring)
@@ -29,6 +28,7 @@ public class MyXMLReader
         try {
             XmlPullParser xpp = prepareXpp();
             while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+                String tempValue;
                 switch (xpp.getEventType()) {
                     case XmlPullParser.START_TAG:
                         tagName = xpp.getName();
@@ -43,8 +43,8 @@ public class MyXMLReader
                         }
                         break;
                     case XmlPullParser.TEXT:
-                        if( tagName.equals("Name")) {
-                           if (Objects.equals(xpp.getText(), "Доллар США") | xpp.getText().equals("Евро"))
+                        if( tagName.equals("CharCode")) {
+                           if (Objects.equals(xpp.getText(), "USD") | xpp.getText().equals("EUR"))
                            {
                                 CurrencyName = xpp.getText();
                             }

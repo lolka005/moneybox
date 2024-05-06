@@ -1,15 +1,13 @@
 package com.example.dip.Classes;
 
-public class IncExcListViewClass
-{
-    private Integer ID;
-    private String CategoryName;
-    private Float Sum;
-    private String CurrencyName;
-    private String Date;
+public class IncExcListViewClass {
+    private final Integer ID;
+    private final String CategoryName;
+    private final Float Sum;
+    private final String CurrencyName;
+    private final String Date;
 
-    public IncExcListViewClass(Integer id, String categoryName, Float sum, String cur_name, String date)
-    {
+    public IncExcListViewClass(Integer id, String categoryName, Float sum, String cur_name, String date) {
         ID = id;
         CategoryName = categoryName;
         Sum = sum;
@@ -29,7 +27,11 @@ public class IncExcListViewClass
         return Sum;
     }
 
-    public String getCurrencyName() { return CurrencyName; }
+    public String getCurrencyName() {
+        return CurrencyName;
+    }
 
-    public String getDate() { return Date;}
+    public String getDate() {
+        return Date;
+    }
 }

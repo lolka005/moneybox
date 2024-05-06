@@ -10,45 +10,38 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.dip.Classes.CatListViewClass;
-import com.example.dip.Classes.IncExcListViewClass;
 import com.example.dip.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class ListViewAdapterForCatList extends BaseAdapter
-{
-    private List<CatListViewClass> List = new ArrayList<CatListViewClass>();
-    public ListViewAdapterForCatList(java.util.List<CatListViewClass> list)
-    {
+public class ListViewAdapterForCatList extends BaseAdapter {
+    private final List<CatListViewClass> List;
+
+    public ListViewAdapterForCatList(java.util.List<CatListViewClass> list) {
         List = list;
     }
 
     @Override
-    public int getCount()
-    {
+    public int getCount() {
         return List.size();
     }
 
     @Override
-    public Object getItem(int position)
-    {
+    public Object getItem(int position) {
         return List.get(position);
     }
 
     @Override
-    public long getItemId(int position)
-    {
+    public long getItemId(int position) {
         return position;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
+    public View getView(int position, View convertView, ViewGroup parent) {
         Context context = parent.getContext();
-        if(convertView == null)
-        {
+        if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.layout_for_list_view_category, parent, false);
         }
