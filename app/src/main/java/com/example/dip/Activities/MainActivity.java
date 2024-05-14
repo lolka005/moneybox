@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -17,7 +18,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.window.SplashScreen;
 
 import java.util.concurrent.TimeUnit;
 
@@ -125,7 +125,13 @@ public class MainActivity extends AppCompatActivity {
         });
         LocalDate tempDate = LocalDate.now();
         for (int i = 0; i < 5; i++) {
-            String Name = tempDate.getMonth().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("ru", "RUS"));
+            String Name = "";
+            if(Resources.getSystem().getConfiguration().locale.getISO3Language().equals("eng")){
+                Name = tempDate.getMonth().getDisplayName(TextStyle.FULL_STANDALONE, Locale.ENGLISH);
+            }
+            else{
+                Name = tempDate.getMonth().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("ru", "RUS"));
+            }
             String startDate = tempDate.withDayOfMonth(1).toString() + " 00:00:00";
             String endDate = tempDate.withDayOfMonth(tempDate.getMonth().length(tempDate.isLeapYear())).toString() + " 00:00:00";
             monthList.add(new DatesListClass(Name, startDate, endDate));
@@ -347,9 +353,11 @@ public class MainActivity extends AppCompatActivity {
         return Currency_Value;
     }
 
+    /**
+     * Функция обновления круговой диаграммы
+     */
     private void FillChart() {
         pieChart.clearChart();
-        pieChart.setTooltipText("sdfsdfsdfsdgsdg");
         Float TempExc = 0F;
         Float TempInc = 0F;
         for (int i = 0; i < currencySpinner.getCount(); i++) {

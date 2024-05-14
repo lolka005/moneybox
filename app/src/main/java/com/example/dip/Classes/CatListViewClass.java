@@ -2,19 +2,24 @@ package com.example.dip.Classes;
 
 public class CatListViewClass {
     private final Integer CatID;
-    private final String CatName;
+    private final String CatNameRus;
+    private final String CatNameEng;
     private final Boolean IncOn;
     private final Boolean ExcOn;
 
-    public CatListViewClass(Integer id, String name, Boolean inc, Boolean exc) {
+    public CatListViewClass(Integer id, String nameRus,String nameEng, Boolean inc, Boolean exc) {
         CatID = id;
-        CatName = name;
+        CatNameRus = nameRus;
+        CatNameEng = nameEng;
         IncOn = inc;
         ExcOn = exc;
     }
 
-    public String getCatName() {
-        return CatName;
+    public String getCatNameRus() {
+        return CatNameRus;
+    }
+    public String getCatNameEng() {
+        return CatNameEng;
     }
 
     public Boolean getIncOn() {

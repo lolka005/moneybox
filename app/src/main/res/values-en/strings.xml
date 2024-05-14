@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Piggy bank</string>
+    <string name="btnAddExp">Add expense</string>
+    <string name="btnAddInc">Add income</string>
+    <string name="mainTextViewText">Current savings:</string>
+    <string name="deleteBtn">Delete</string>
+    <string name="saveBtn">Save</string>
+    <string name="showAllExp">Expense list</string>
+    <string name="showAllInc">Income list</string>
+    <string name="backBtn">Back</string>
+    <string name="TextData">Date:</string>
+    <string name="Inc">Incomes</string>
+    <string name="Exc">Expenses</string>
+    <string name="CatCreationToolBar">Create new category</string>
+    <string name="CatEditToolBar">Editing a category</string>
+    <string name="CatCreationBtn">Create new category</string>
+    <string name="AllCatList">Category list</string>
+    <string name="ChosenMonth">Month:</string>
+    <string name="IncCreatrionToolBar">Adding a new income</string>
+    <string name="ExcCreatrionToolBar">Adding a new expense</string>
+    <string name="IncEditToolBar">Editing a income</string>
+    <string name="ExcEditToolBar">Editing a expense</string>
+    <string name="IncListToolBar">Income list</string>
+    <string name="ExcListToolBar">Expense list</string>
+    <string name="ErrorZeroSumField">The amount field cannot be zero!</string>
+    <string name="ErrorEmptyDateField">The date field cannot be empty!</string>
+    <string name="ErrorEmptySumField">The amount field cannot be empty!</string>
+    <string name="ErrorEmptyCheckBoxes">The category must have a type of movement!</string>
+    <string name="ErrorEmptyCatName">The category name field cannot be empty!</string>
+    <string name="ErrorHasCategory">A category with this name already exists!</string>
+</resources>

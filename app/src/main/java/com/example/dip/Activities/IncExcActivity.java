@@ -3,6 +3,7 @@ package com.example.dip.Activities;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import com.example.dip.R;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class IncExcActivity extends AppCompatActivity {
     private TextView ToolBarText;
@@ -115,19 +117,26 @@ public class IncExcActivity extends AppCompatActivity {
         sqlAnswer = new ArrayList<>();
         DBHelper databaseHelper = new DBHelper(this);
         db = databaseHelper.open();
-        userCursor = db.rawQuery("SELECT Categories.Cat_ID, Cat_Name FROM Categories INNER JOIN CatAndMoves ON Categories.Cat_ID = CatAndMoves.Cat_ID WHERE CatAndMoves.Type_ID = ?", new String[]{String.valueOf(MoveTypeID)});
+        userCursor = db.rawQuery("SELECT Categories.Cat_ID, Cat_Name_Rus,Cat_Name_Eng FROM Categories INNER JOIN CatAndMoves ON Categories.Cat_ID = CatAndMoves.Cat_ID WHERE CatAndMoves.Type_ID = ?", new String[]{String.valueOf(MoveTypeID)});
         while (userCursor.moveToNext()) {
-            sqlAnswer.add(new MovesTypesClass(userCursor.getInt(0), userCursor.getString(1)));
+            sqlAnswer.add(new MovesTypesClass(userCursor.getInt(0), userCursor.getString(1), userCursor.getString(2)));
         }
         String[] tempNameOfCategory = new String[sqlAnswer.size()];
-        for (int i = 0; i < tempNameOfCategory.length; i++) {
-            tempNameOfCategory[i] = sqlAnswer.get(i).getType_Name();
+        if(Resources.getSystem().getConfiguration().locale.getISO3Language().equals("eng")) {
+            for (int i = 0; i < tempNameOfCategory.length; i++) {
+                tempNameOfCategory[i] = sqlAnswer.get(i).getType_Name_Eng();
+            }
+        }
+        else{
+            for (int i = 0; i < tempNameOfCategory.length; i++) {
+                tempNameOfCategory[i] = sqlAnswer.get(i).getType_Name_Rus();
+            }
         }
         adapterForSpinnerCategory.addAll(tempNameOfCategory);
         spinnerCategory.setAdapter(adapterForSpinnerCategory);
         List<MyCurrencyClass> listOfCurrency = getCurrencyListFromDB();
         if (listOfCurrency.isEmpty()) {
-            listOfCurrency.add(new MyCurrencyClass("Российский рубль", 1F));
+            listOfCurrency.add(new MyCurrencyClass("RUB", 1F));
         }
         String[] tempNameOfCurrency = new String[listOfCurrency.size()];
         for (int i = 0; i < listOfCurrency.size(); i++) {
@@ -159,9 +168,9 @@ public class IncExcActivity extends AppCompatActivity {
             DateEditText.setText(tempStrinMas[0]);
             DateText = date;
             if (MoveTypeID == 1)
-                ToolBarText.setText("Редактирование дохода");
+                ToolBarText.setText(getResources().getString(R.string.IncEditToolBar));
             else if (MoveTypeID == 2)
-                ToolBarText.setText("Редактирование расхода");
+                ToolBarText.setText(getResources().getString(R.string.ExcEditToolBar));
         } else {
             spinnerCategory.setSelection(0);
             spinnerCurrency.setSelection(0);
@@ -172,9 +181,9 @@ public class IncExcActivity extends AppCompatActivity {
             lp.leftMargin = (int) getResources().getDimension(R.dimen.margin);
             SaveButton.setLayoutParams(lp);
             if (MoveTypeID == 1)
-                ToolBarText.setText("Добавление нового дохода");
+                ToolBarText.setText(getResources().getString(R.string.IncCreatrionToolBar));
             else if (MoveTypeID == 2)
-                ToolBarText.setText("Добавление нового расхода");
+                ToolBarText.setText(getResources().getString(R.string.ExcCreatrionToolBar));
         }
     }
 
@@ -201,9 +210,17 @@ public class IncExcActivity extends AppCompatActivity {
                                     String temp = spinnerCategory.getSelectedItem().toString();
                                     Integer temp_ID = -1;
                                     for (int i = 0; i < sqlAnswer.size(); i++) {
-                                        if (temp.equals(sqlAnswer.get(i).getType_Name())) {
-                                            temp_ID = sqlAnswer.get(i).getTypeID();
-                                            break;
+                                        if(Resources.getSystem().getConfiguration().locale.getISO3Language().equals("eng")) {
+                                            if (temp.equals(sqlAnswer.get(i).getType_Name_Eng())) {
+                                                temp_ID = sqlAnswer.get(i).getTypeID();
+                                                break;
+                                            }
+                                        }
+                                        else{
+                                            if (temp.equals(sqlAnswer.get(i).getType_Name_Rus())) {
+                                                temp_ID = sqlAnswer.get(i).getTypeID();
+                                                break;
+                                            }
                                         }
                                     }
                                     ContentValues cv = new ContentValues();
@@ -229,9 +246,17 @@ public class IncExcActivity extends AppCompatActivity {
                                     String temp = spinnerCategory.getSelectedItem().toString();
                                     Integer temp_ID = -1;
                                     for (int i = 0; i < sqlAnswer.size(); i++) {
-                                        if (temp.equals(sqlAnswer.get(i).getType_Name())) {
-                                            temp_ID = sqlAnswer.get(i).getTypeID();
-                                            break;
+                                        if(Resources.getSystem().getConfiguration().locale.getISO3Language().equals("eng")) {
+                                            if (temp.equals(sqlAnswer.get(i).getType_Name_Eng())) {
+                                                temp_ID = sqlAnswer.get(i).getTypeID();
+                                                break;
+                                            }
+                                        }
+                                        else{
+                                            if (temp.equals(sqlAnswer.get(i).getType_Name_Rus())) {
+                                                temp_ID = sqlAnswer.get(i).getTypeID();
+                                                break;
+                                            }
                                         }
                                     }
                                     ContentValues cv = new ContentValues();
@@ -251,15 +276,15 @@ public class IncExcActivity extends AppCompatActivity {
                         goHome();
                     }
                 } else {
-                    Toast toast = Toast.makeText(this, "Поле суммы не может быть нулевым!", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(this, getResources().getString(R.string.ErrorZeroSumField), Toast.LENGTH_SHORT);
                     toast.show();
                 }
             } else {
-                Toast toast = Toast.makeText(this, "Поле даты не может быть пустым!", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(this, getResources().getString(R.string.ErrorEmptyDateField), Toast.LENGTH_SHORT);
                 toast.show();
             }
         } else {
-            Toast toast = Toast.makeText(this, "Поле суммы не может быть пустым!", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(this, getResources().getString(R.string.ErrorEmptySumField), Toast.LENGTH_SHORT);
             toast.show();
         }
     }

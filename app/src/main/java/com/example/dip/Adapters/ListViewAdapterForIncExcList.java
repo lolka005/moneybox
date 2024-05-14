@@ -1,6 +1,7 @@
 package com.example.dip.Adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +62,12 @@ public class ListViewAdapterForIncExcList extends BaseAdapter {
         TextView SumText = ll.findViewById(R.id.SumTextInListView);
         TextView CurrencyText = ll.findViewById(R.id.CurrencyText);
         IncExcListViewClass lvClass = List.get(position);
-        CategoryText.setText(lvClass.getCategoryName());
+        if(Resources.getSystem().getConfiguration().locale.getISO3Language().equals("eng")){
+            CategoryText.setText(lvClass.getCategoryNameEng());
+        }
+        else{
+            CategoryText.setText(lvClass.getCategoryNameRus());
+        }
         SumText.setText(String.valueOf(lvClass.getSum()));
         CurrencyText.setText(String.valueOf(lvClass.getCurrencyName()));
         return convertView;

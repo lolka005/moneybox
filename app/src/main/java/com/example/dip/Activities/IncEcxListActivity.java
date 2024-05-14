@@ -1,6 +1,7 @@
 package com.example.dip.Activities;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -17,8 +18,10 @@ import com.example.dip.Classes.IncExcListViewClass;
 import com.example.dip.Adapters.ListViewAdapterForIncExcList;
 import com.example.dip.R;
 
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class IncEcxListActivity extends AppCompatActivity
         implements AdapterView.OnItemClickListener {
@@ -47,22 +50,23 @@ public class IncEcxListActivity extends AppCompatActivity
         toolBarText = findViewById(R.id.ToolbarList);
         DBHelper databaseHelper = new DBHelper(this);
         SQLiteDatabase db = databaseHelper.open();
-        userCursor = db.rawQuery("SELECT Money.ID, Money.Sum, Categories.Cat_Name, Currency.Currency_Name, Money.Date  FROM Money INNER JOIN Categories ON Categories.Cat_ID = Money.Cat_ID INNER JOIN Currency ON Currency.Currency_ID = Money.Currency_ID WHERE Money.MoveType_ID = ? AND (Money.Date >= ? AND Money.Date <= ?)", new String[]{String.valueOf(MoveTypeExtra), StartDate, EndDate});
+        userCursor = db.rawQuery("SELECT Money.ID, Money.Sum, Categories.Cat_Name_Rus,Categories.Cat_Name_Eng, Currency.Currency_Name, Money.Date  FROM Money INNER JOIN Categories ON Categories.Cat_ID = Money.Cat_ID INNER JOIN Currency ON Currency.Currency_ID = Money.Currency_ID WHERE Money.MoveType_ID = ? AND (Money.Date >= ? AND Money.Date <= ?)", new String[]{String.valueOf(MoveTypeExtra), StartDate, EndDate});
         while (userCursor.moveToNext()) {
             Integer id = userCursor.getInt(0);
             Float sum = userCursor.getFloat(1);
-            String type_name = userCursor.getString(2);
-            String currency_name = userCursor.getString(3);
-            String date = userCursor.getString(4);
-            list.add(new IncExcListViewClass(id, type_name, sum, currency_name, date));
+            String type_name_rus = userCursor.getString(2);
+            String type_name_eng = userCursor.getString(3);
+            String currency_name = userCursor.getString(4);
+            String date = userCursor.getString(5);
+            list.add(new IncExcListViewClass(id, type_name_rus,type_name_eng, sum, currency_name, date));
         }
         ListViewAdapterForIncExcList arad = new ListViewAdapterForIncExcList(list);
         ll.setOnItemClickListener(this);
         ll.setAdapter(arad);
         if (MoveTypeExtra == 1) {
-            toolBarText.setText("Список доходов");
+            toolBarText.setText(getResources().getString(R.string.IncListToolBar));
         } else if (MoveTypeExtra == 2) {
-            toolBarText.setText("Список расходов");
+            toolBarText.setText(getResources().getString(R.string.ExcListToolBar));
         }
     }
 
@@ -79,7 +83,12 @@ public class IncEcxListActivity extends AppCompatActivity
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(this, IncExcActivity.class);
         intent.putExtra("MoveTypeID", MoveTypeExtra);
-        intent.putExtra("TypeName", list.get(position).getCategoryName());
+        if(Resources.getSystem().getConfiguration().locale.getISO3Language().equals("eng")){
+            intent.putExtra("TypeName", list.get(position).getCategoryNameEng());
+        }
+        else{
+            intent.putExtra("TypeName", list.get(position).getCategoryNameRus());
+        }
         intent.putExtra("CurrentSum", list.get(position).getSum());
         intent.putExtra("MoneyID", list.get(position).getID());
         intent.putExtra("CurrencyName", list.get(position).getCurrencyName());

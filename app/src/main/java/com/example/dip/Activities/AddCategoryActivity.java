@@ -31,6 +31,13 @@ public class AddCategoryActivity extends AppCompatActivity {
     private SQLiteDatabase db;
     private Cursor userCursor;
 
+    /**
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,18 +61,22 @@ public class AddCategoryActivity extends AppCompatActivity {
             IncCheckBox.setChecked(IncOn);
             ExcCheckBox.setChecked(ExcOn);
             NewCategoryName.setText(CatName);
-            ToolBarText.setText("Редактирование категории");
+            ToolBarText.setText(getResources().getString(R.string.CatEditToolBar));
         } catch (NullPointerException e) {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             lp.rightMargin = (int) getResources().getDimension(R.dimen.margin);
             lp.bottomMargin = (int) getResources().getDimension(R.dimen.margin);
             lp.topMargin = (int) getResources().getDimension(R.dimen.margin);
             lp.leftMargin = (int) getResources().getDimension(R.dimen.margin);
-            ToolBarText.setText("Создание новой категории");
+            ToolBarText.setText(getResources().getString(R.string.CatCreationToolBar));
             SaveButton.setLayoutParams(lp);
         }
     }
 
+    /**
+     * Функция нажатия на кнопку "Сохранить"
+     * @param view
+     */
     public void ClickSaveCatBtn(View view) {
         if (!NewCategoryName.getText().equals("")) {
             if (IncCheckBox.isChecked() || ExcCheckBox.isChecked()) {
@@ -75,12 +86,14 @@ public class AddCategoryActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 ContentValues cv1 = new ContentValues();
-                                cv1.put("Cat_Name", NewCategoryName.getText().toString());
+                                cv1.put("Cat_Name_Rus", NewCategoryName.getText().toString());
+                                cv1.put("Cat_Name_Eng", NewCategoryName.getText().toString());
                                 db.insert("Categories", null, cv1);
                                 if (IncCheckBox.isChecked()) {
                                     ContentValues cv2 = new ContentValues();
                                     cv2.put("Cat_ID", getIDOfNewCategorie(NewCategoryName.getText().toString()));
-                                    cv2.put("Cat_Name", NewCategoryName.getText().toString());
+                                    cv2.put("Cat_Name_Rus", NewCategoryName.getText().toString());
+                                    cv2.put("Cat_Name_Eng", NewCategoryName.getText().toString());
                                     db.insert("Categories", null, cv2);
                                     ContentValues cv3 = new ContentValues();
                                     cv3.put("Cat_ID", getIDOfNewCategorie(NewCategoryName.getText().toString()));
@@ -90,7 +103,8 @@ public class AddCategoryActivity extends AppCompatActivity {
                                 if (ExcCheckBox.isChecked()) {
                                     ContentValues cv2 = new ContentValues();
                                     cv2.put("Cat_ID", getIDOfNewCategorie(NewCategoryName.getText().toString()));
-                                    cv2.put("Cat_Name", NewCategoryName.getText().toString());
+                                    cv2.put("Cat_Name_Rus", NewCategoryName.getText().toString());
+                                    cv2.put("Cat_Name_Eng", NewCategoryName.getText().toString());
                                     db.insert("CatAndMoves", null, cv2);
                                     ContentValues cv3 = new ContentValues();
                                     cv3.put("Cat_ID", getIDOfNewCategorie(NewCategoryName.getText().toString()));
@@ -103,7 +117,7 @@ public class AddCategoryActivity extends AppCompatActivity {
                         thread.start();
                         goHome();
                     } else {
-                        Toast toast = Toast.makeText(AddCategoryActivity.this, "Категория с таким наименованием уже существует!", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(AddCategoryActivity.this, getResources().getString(R.string.ErrorHasCategory), Toast.LENGTH_SHORT);
                         toast.show();
                     }
                 } else {
@@ -111,7 +125,8 @@ public class AddCategoryActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             ContentValues cv1 = new ContentValues();
-                            cv1.put("Cat_Name", NewCategoryName.getText().toString());
+                            cv1.put("Cat_Name_Rus", NewCategoryName.getText().toString());
+                            cv1.put("Cat_Name_Eng", NewCategoryName.getText().toString());
                             db.update("Categories", cv1, "Cat_ID = ?", new String[]{String.valueOf(CatID)});
                             if (IncCheckBox.isChecked()) {
                                 userCursor = db.rawQuery("SELECT COUNT(*) FROM CatAndMoves WHERE Cat_ID = ? AND Type_ID = 1", new String[]{String.valueOf(CatID)});
@@ -156,15 +171,19 @@ public class AddCategoryActivity extends AppCompatActivity {
                     goHome();
                 }
             } else {
-                Toast toast = Toast.makeText(this, "Категория должна иметь тип движения!", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(this, getResources().getString(R.string.ErrorEmptyCheckBoxes), Toast.LENGTH_SHORT);
                 toast.show();
             }
         } else {
-            Toast toast = Toast.makeText(this, "Поле названия категории не может быть пустым!", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(this, getResources().getString(R.string.ErrorEmptyCatName), Toast.LENGTH_SHORT);
             toast.show();
         }
     }
 
+    /**
+     * Функция нажатия на кнопку "Удалить"
+     * @param view
+     */
     public void ClickDeleteCatBtn(View view) {
         Runnable runnable = new Runnable() {
             @Override
@@ -187,9 +206,14 @@ public class AddCategoryActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * Функия возврата ID категории, по её имени
+     * @param CatName Наименование категории
+     * @return ID категории
+     */
     private Integer getIDOfNewCategorie(String CatName) {
         int ID = -1;
-        userCursor = db.rawQuery("SELECT Cat_ID FROM Categories WHERE Cat_Name = ?", new String[]{CatName});
+        userCursor = db.rawQuery("SELECT Cat_ID FROM Categories WHERE Cat_Name_Rus = ?", new String[]{CatName});
         while (userCursor.moveToNext()) {
             ID = userCursor.getInt(0);
         }
